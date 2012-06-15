@@ -131,9 +131,11 @@ class ImagineController
             // TODO: get rid of hard-coded quality and format
             $this->filterManager->get($filter)
                 ->apply($this->imagine->open($sourcePath))
-                ->save($realPath, array('quality' => $this->filterManager->getOption($filter, "quality", 100)))
-                ->show($this->filterManager->getOption($filter, "format", "png"));
-
+                ->save($realPath, array('quality' => $this->filterManager->getOption($filter, "quality", 100)));
+                
+            $f = fopen($realPath,'rb');
+            fpassthru($f);
+            fclose($f);
             // TODO: add more media headers
             return new Response(ob_get_clean(), 201, array(
                 'content-type' => 'image/' . $this->filterManager->getOption($filter, "format", "png"),
